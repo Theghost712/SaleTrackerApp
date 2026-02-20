@@ -1,50 +1,78 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerSchema } from './Validationschema';
+import { ValidatedInput } from './Inputvalidation';
+import { useCart } from './CartContext';
 
 export default function RegisterScreen({ navigation }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { users, registerUser } = useCart();
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
-  const handleRegister = () => {
-    if (name && email && password) {
-      Alert.alert('Success', 'Account created successfully!', [
-        { text: 'OK', onPress: () => navigation.navigate('Login') }
-      ]);
-    } else {
-      Alert.alert('Error', 'Please fill in all fields');
+  const onSubmit = (data) => {
+    const emailExists = users.some(user => user.email.toLowerCase() === data.email.toLowerCase());
+    
+    if (emailExists) {
+      Alert.alert('Registration Failed', `${data.email} already exists`);
+      return;
     }
+
+    registerUser({
+      fullName: data.fullName,
+      email: data.email,
+      password: data.password,
+      role: 'cashier' // Default role for new registrations
+    });
+
+    console.log(data);
+    Alert.alert('Success', 'Account created successfully!', [
+      { text: 'OK', onPress: () => navigation.navigate('Login') }
+    ]);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
       
-      <TextInput
-        style={styles.input}
+      <ValidatedInput
+        control={control}
+        name="fullName"
         placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
       />
 
-      <TextInput
-        style={styles.input}
+      <ValidatedInput
+        control={control}
+        name="email"
         placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        autoCorrect={false}
       />
       
-      <TextInput
-        style={styles.input}
+      <ValidatedInput
+        control={control}
+        name="password"
         placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <ValidatedInput
+        control={control}
+        name="confirmPassword"
+        placeholder="Confirm Password"
+        secureTextEntry
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
@@ -68,14 +96,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
     color: '#333',
-  },
-  input: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
   },
   button: {
     backgroundColor: '#28a745',

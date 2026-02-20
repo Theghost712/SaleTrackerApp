@@ -1,53 +1,83 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { useCart } from "./CartContext";
 
 export default function ReportsScreen() {
+  const { dailySales, transactions } = useCart();
+
+  // Calculate totals
+  const today = new Date().toISOString().split("T")[0];
+  const todaySales = dailySales.find((d) => d.date === today) || {
+    total: "0",
+    transactions: 0,
+  };
+  const totalRevenue = dailySales.reduce(
+    (sum, day) => sum + parseInt(day.total || "0"),
+    0,
+  );
+  const totalTransactions = transactions.length;
+
+  // Calculate averages
+  const avgTransactionValue =
+    totalTransactions > 0 ? Math.round(totalRevenue / totalTransactions) : 0;
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Financial Reports</Text>
+      <Text style={styles.header}>Business Reports</Text>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Daily Report (Today)</Text>
+        <Text style={styles.sectionTitle}>Today's Summary</Text>
         <View style={styles.card}>
           <View style={styles.row}>
-            <Text style={styles.label}>Gross Sales</Text>
-            <Text style={styles.value}>Tsh 3,125,000</Text>
+            <Text style={styles.label}>Sales Today</Text>
+            <Text style={styles.value}>
+              Tsh {parseInt(todaySales.total).toLocaleString()}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Net Sales</Text>
-            <Text style={styles.value}>Tsh 2,800,000</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Transactions</Text>
-            <Text style={styles.value}>45</Text>
+            <Text style={styles.label}>Transactions Today</Text>
+            <Text style={styles.value}>{todaySales.transactions}</Text>
           </View>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Monthly Report (Current Month)</Text>
+        <Text style={styles.sectionTitle}>Overall Performance</Text>
         <View style={styles.card}>
           <View style={styles.row}>
-            <Text style={styles.label}>Gross Sales</Text>
-            <Text style={styles.value}>Tsh 113,300,000</Text>
+            <Text style={styles.label}>Total Revenue</Text>
+            <Text style={styles.value}>
+              Tsh {totalRevenue.toLocaleString()}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Net Sales</Text>
-            <Text style={styles.value}>Tsh 98,500,000</Text>
+            <Text style={styles.label}>Total Transactions</Text>
+            <Text style={styles.value}>{totalTransactions}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Total Orders</Text>
-            <Text style={styles.value}>1,250</Text>
+            <Text style={styles.label}>Avg. Transaction Value</Text>
+            <Text style={styles.value}>
+              Tsh {avgTransactionValue.toLocaleString()}
+            </Text>
           </View>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Total Revenue</Text>
-        <View style={styles.totalCard}>
-          <Text style={styles.totalLabel}>Lifetime Revenue</Text>
-          <Text style={styles.totalValue}>Tsh 850,000,000</Text>
-        </View>
+        <Text style={styles.sectionTitle}>Daily Breakdown</Text>
+        {dailySales.map((day, index) => (
+          <View key={index} style={styles.dailyCard}>
+            <View style={styles.dailyHeader}>
+              <Text style={styles.dailyDate}>{day.date}</Text>
+              <Text style={styles.dailyTransactions}>
+                {day.transactions} transactions
+              </Text>
+            </View>
+            <Text style={styles.dailyTotal}>
+              Tsh {parseInt(day.total).toLocaleString()}
+            </Text>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -56,13 +86,13 @@ export default function ReportsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     padding: 20,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 20,
   },
   section: {
@@ -70,48 +100,56 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#555',
+    fontWeight: "600",
+    color: "#555",
     marginBottom: 10,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 15,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
   },
   label: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   value: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
-  totalCard: {
-    backgroundColor: '#007AFF',
+  dailyCard: {
+    backgroundColor: "#fff",
     borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
+    padding: 15,
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    elevation: 2,
   },
-  totalLabel: {
-    color: 'rgba(255,255,255,0.8)',
+  dailyHeader: {
+    flex: 1,
+  },
+  dailyDate: {
     fontSize: 16,
-    marginBottom: 5,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
   },
-  totalValue: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: 'bold',
+  dailyTransactions: {
+    fontSize: 12,
+    color: "#999",
+  },
+  dailyTotal: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#007AFF",
   },
 });

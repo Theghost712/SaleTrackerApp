@@ -19,9 +19,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
         <Text style={styles.price}>{product.price}</Text>
         <Text style={styles.description}>
           This is a high-quality {product.name}. It features state-of-the-art technology and is built to last. Perfect for your daily needs.
-        </Text>
-        
-        {!isAdmin && (
+        </Text>{!isAdmin && (
           <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
             <Text style={styles.buttonText}>Add to Cart</Text>
           </TouchableOpacity>

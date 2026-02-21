@@ -31,31 +31,34 @@ export default function CashierHomeScreen({ navigation }) {
           <Text style={styles.statsValue}>{itemCount} items</Text>
         </View>
 
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => navigation.navigate("ProductList", { isAdmin: false })}
-        >
-          <Text style={styles.cardTitle}>Browse Products</Text>
-          <Text style={styles.cardContent}>
-            Add items to current transaction
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.gridContainer}>
+          <TouchableOpacity
+            style={[styles.card, styles.gridItem]}
+            onPress={() => navigation.navigate("ProductList", { isAdmin: false })}
+          >
+            <Text style={styles.cardEmoji}>🛍️</Text>
+            <Text style={styles.cardTitle}>Browse</Text>
+            <Text style={styles.cardContent}>Products</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.card, styles.cartCard]}
-          onPress={() => navigation.navigate("Cart")}
-        >
-          <Text style={styles.cardTitle}>View Cart ({itemCount})</Text>
-          <Text style={styles.cardContent}>Review items and checkout</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.card, styles.gridItem, styles.cartCard]}
+            onPress={() => navigation.navigate("Cart")}
+          >
+            <Text style={styles.cardEmoji}>🛒</Text>
+            <Text style={styles.cardTitle}>Cart ({itemCount})</Text>
+            <Text style={styles.cardContent}>Checkout</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.card, styles.historyCard]}
-          onPress={() => navigation.navigate("TransactionHistory")}
-        >
-          <Text style={styles.cardTitle}>Transaction History</Text>
-          <Text style={styles.cardContent}>View past transactions</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.card, styles.gridItem, styles.historyCard]}
+            onPress={() => navigation.navigate("TransactionHistory")}
+          >
+            <Text style={styles.cardEmoji}>📜</Text>
+            <Text style={styles.cardTitle}>History</Text>
+            <Text style={styles.cardContent}>Transactions</Text>
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           style={[styles.button, styles.logoutButton]}
@@ -88,53 +91,72 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   statsCard: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#007AFF", 
     padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
+    borderRadius: 16,
+    marginBottom: 25,
     alignItems: "center",
+    shadowColor: "#007AFF",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   statsLabel: {
     color: "rgba(255,255,255,0.9)",
     fontSize: 14,
+    fontWeight: "600",
     marginBottom: 5,
+    textTransform: "uppercase",
+    letterSpacing: 1,
   },
   statsValue: {
     color: "#fff",
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: "bold",
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   card: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10,
-    marginBottom: 15,
+    borderRadius: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
+  gridItem: {
+    width: '48%',
+    marginBottom: 15,
+    alignItems: 'center',
+    paddingVertical: 25,
+  },
+  cardEmoji: {
+    fontSize: 32,
+    marginBottom: 10,
+  },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "bold",
     marginBottom: 5,
+    color: "#333",
   },
   cardContent: {
-    color: "#666",
+    color: "#888",
+    fontSize: 12,
+    textAlign: "center",
   },
-  cartCard: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#FF9500",
-  },
-  historyCard: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#5856D6",
-  },
+  cartCard: {},
+  historyCard: {},
   button: {
     backgroundColor: "#007AFF",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
     marginTop: 10,
   },

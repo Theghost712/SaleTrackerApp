@@ -14,7 +14,7 @@ export default function SalesManagementScreen() {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    // Simulate a network request or data refresh
+   
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

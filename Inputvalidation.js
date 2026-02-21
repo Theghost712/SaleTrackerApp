@@ -27,11 +27,11 @@ export const ValidatedInput = ({ control, name, placeholder, secureTextEntry, ..
 const styles = StyleSheet.create({
   inputContainer: { marginBottom: 15, width: '100%' },
   input: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: '#F8F9FA',
+    padding: 16,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E9ECEF',
     fontSize: 16,
   },
   errorInput: { borderColor: '#ff3333', backgroundColor: '#fff0f0' },

@@ -5,7 +5,7 @@ import { useCart } from "./CartContext";
 export default function ReportsScreen() {
   const { dailySales, transactions } = useCart();
 
-  // Calculate totals
+ 
   const today = new Date().toISOString().split("T")[0];
   const todaySales = dailySales.find((d) => d.date === today) || {
     total: "0",
@@ -17,7 +17,7 @@ export default function ReportsScreen() {
   );
   const totalTransactions = transactions.length;
 
-  // Calculate averages
+  
   const avgTransactionValue =
     totalTransactions > 0 ? Math.round(totalRevenue / totalTransactions) : 0;
 

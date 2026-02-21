@@ -7,12 +7,11 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   
-  // Initial dummy data for seeding (only used if DB is empty)
   const initialUsers = [
     { email: 'admin@test.com', password: 'password123', fullName: 'Admin User', role: 'admin' },
     { email: 'cashier@test.com', password: 'password123', fullName: 'Cashier User', role: 'cashier' }
   ];
-  // User Management State
+ 
   const [users, setUsers] = useState(initialUsers);
 
   const initialProducts = [
@@ -37,33 +36,32 @@ export const CartProvider = ({ children }) => {
     { name: "Oranges 1kg", price: "5800", category: "Fruits", barcode: "1234567890141", image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=200" },
     { name: "Water 5L", price: "4200", category: "Beverages", barcode: "1234567890142", image: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=200" },
   ];
-  // Initialize products with IDs
+
   const [products, setProducts] = useState(initialProducts.map((p, i) => ({ ...p, id: (i + 1).toString() })));
 
-  // Initial dummy data for Orders (Customer side)
+ 
   const [orders, setOrders] = useState([
     { id: '1', product: 'Milk 1L', date: '2023-10-27', status: 'Out for Delivery', price: 'Tsh 4,500' },
     { id: '2', product: 'Bread White', date: '2023-10-25', status: 'Delivered', price: 'Tsh 2,500' },
   ]);
 
-  // Initial dummy data for Sales (Seller side)
+  
   const [sales, setSales] = useState([
     { id: '1', customer: 'John Doe', product: 'Milk 1L', amount: '4500', date: '2023-10-25' },
     { id: '2', customer: 'Jane Smith', product: 'Bread White', amount: '2500', date: '2023-10-24' },
     { id: '3', customer: 'Alice Johnson', product: 'Rice 5kg', amount: '12500', date: '2023-10-23' },
   ]);
 
-  // Transactions history
+ 
   const initialTransactions = [
     { id: "T001", cashier: "John", items: 5, total: "45200", date: "2025-02-19", paymentMethod: "Cash", amountPaid: "46000", change: "800", cartItems: [] },
     { id: "T002", cashier: "Jane", items: 3, total: "23500", date: "2025-02-19", paymentMethod: "Card", amountPaid: "23500", change: "0", cartItems: [] },
   ];
   const [transactions, setTransactions] = useState(initialTransactions);
 
-  // Daily sales stats
   const [dailySales, setDailySales] = useState([]);
 
-  // Calculate daily sales whenever transactions change
+ 
   useEffect(() => {
     const stats = {};
     transactions.forEach(t => {
@@ -140,7 +138,7 @@ export const CartProvider = ({ children }) => {
 
     const newTransaction = {
       id: `T${Math.floor(Math.random() * 10000)}`,
-      cashier: "Current Cashier", // This would come from auth context
+      cashier: "Current Cashier", 
       items: itemsCount,
       total: total.toString(),
       date: date,
@@ -152,7 +150,7 @@ export const CartProvider = ({ children }) => {
 
     setTransactions([newTransaction, ...transactions]);
 
-    // Also add to Sales table for the Owner view
+    
     const newSales = cartItems.map(item => ({
         id: Math.random().toString(),
         customer: "Walk-in Customer",
@@ -166,7 +164,7 @@ export const CartProvider = ({ children }) => {
     return newTransaction;
   };
 
-  // Legacy support for CartScreen
+ 
   const checkout = () => {
     completeTransaction('Cash', calculateTotal(), 0);
   };

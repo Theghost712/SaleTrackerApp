@@ -13,9 +13,6 @@ import CheckoutScreen from "./CheckoutScreen";
 import ProductDetailsScreen from "./ProductDetailsScreen";
 import CartScreen from "./CartScreen";
 import { CartProvider } from "./CartContext";
-import FormInput from "./FormInput";
-import Validationschema from "./Validationschema";
-import InputValidatation from "./Inputvalidation";
 
 
 const Stack = createNativeStackNavigator();
@@ -24,26 +21,20 @@ export default function App() {
   return (
     <CartProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator 
+          initialRouteName="Login"
+          screenOptions={{
+            headerStyle: { backgroundColor: '#007AFF' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShadowVisible: false,
+          }}
+        >
           <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
             />
-          <Stack.Screen
-            name="InputValidation"
-            component={InputValidatation}
-            options={{ title: "Input Validation" }}
-          />
-          <Stack.Screen
-            name="Validationschema"
-            component={Validationschema}
-            options={{ title: "Validation Schema" }}
-          />
-            <Stack.Screen
-            name="FormInput"
-            component={FormInput}
-          />
           <Stack.Screen
             name="Register"
             component={RegisterScreen}

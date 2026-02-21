@@ -30,7 +30,7 @@ export default function RegisterScreen({ navigation }) {
       fullName: data.fullName,
       email: data.email,
       password: data.password,
-      role: 'cashier' // Default role for new registrations
+      role: 'cashier' 
     });
 
     console.log(data);

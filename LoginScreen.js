@@ -3,8 +3,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from './Validationschema'; 
 import { ValidatedInput } from './Inputvalidation';
+import { useCart } from './CartContext';
 
 export default function AuthScreen({ navigation }) {
+  const { users } = useCart();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(loginSchema), 
     defaultValues: { email: '', password: '' }
@@ -13,12 +15,16 @@ export default function AuthScreen({ navigation }) {
   const onSubmit = (data) => {
     console.log(data);
     
-    
-    const targetScreen = data.email.toLowerCase().includes('admin') ? 'OwnerHome' : 'CashierHome';
+    const user = users.find(u => u.email.toLowerCase() === data.email.toLowerCase() && u.password === data.password);
 
-    Alert.alert("Success", "Login Successful!", [
-      { text: "OK", onPress: () => navigation.navigate(targetScreen) }
-    ]);
+    if (user) {
+      const targetScreen = user.role === 'admin' ? 'OwnerHome' : 'CashierHome';
+      Alert.alert("Success", "Login Successful!", [
+        { text: "OK", onPress: () => navigation.navigate(targetScreen) }
+      ]);
+    } else {
+      Alert.alert("Login Failed", "Invalid email or password. Please register if you don't have an account.");
+    }
   };
 
   return (

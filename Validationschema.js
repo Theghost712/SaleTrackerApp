@@ -9,8 +9,8 @@ export const loginSchema = z.object({
   email: emailValidation,
   password: passwordValidation,
 });
-
-
+                                                                                                                                                                                                                                                                                                                                                                                           
+ 
 export const registerSchema = z.object({
   fullName: z.string().min(2, "Name is too short"),
   email: emailValidation,

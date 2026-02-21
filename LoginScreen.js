@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   View,
   Text,
@@ -10,8 +11,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./Validationschema";
 import { ValidatedInput } from "./Inputvalidation";
+=======
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from './Validationschema'; 
+import { ValidatedInput } from './Inputvalidation';
+import { useCart } from './CartContext';
+>>>>>>> eaf07c97398d7e005c42ce67e48ed5923b661680
 
 export default function AuthScreen({ navigation }) {
+  const { users } = useCart();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -19,6 +29,7 @@ export default function AuthScreen({ navigation }) {
 
   const onSubmit = (data) => {
     console.log(data);
+<<<<<<< HEAD
 
     const targetScreen = data.email.toLowerCase().includes("admin")
       ? "OwnerHome"
@@ -27,6 +38,19 @@ export default function AuthScreen({ navigation }) {
     Alert.alert("Success", "Login Successful!", [
       { text: "OK", onPress: () => navigation.navigate(targetScreen) },
     ]);
+=======
+    
+    const user = users.find(u => u.email.toLowerCase() === data.email.toLowerCase() && u.password === data.password);
+
+    if (user) {
+      const targetScreen = user.role === 'admin' ? 'OwnerHome' : 'CashierHome';
+      Alert.alert("Success", "Login Successful!", [
+        { text: "OK", onPress: () => navigation.navigate(targetScreen) }
+      ]);
+    } else {
+      Alert.alert("Login Failed", "Invalid email or password. Please register if you don't have an account.");
+    }
+>>>>>>> eaf07c97398d7e005c42ce67e48ed5923b661680
   };
 
   return (

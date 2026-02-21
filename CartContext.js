@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const CartContext = createContext();
 
@@ -6,72 +6,224 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  
+
   const initialUsers = [
-    { email: 'admin@test.com', password: 'password123', fullName: 'Admin User', role: 'admin' },
-    { email: 'cashier@test.com', password: 'password123', fullName: 'Cashier User', role: 'cashier' }
+    {
+      email: "admin@test.com",
+      password: "password123",
+      fullName: "Admin User",
+      role: "admin",
+    },
+    {
+      email: "cashier@test.com",
+      password: "password123",
+      fullName: "Cashier User",
+      role: "cashier",
+    },
   ];
- 
+
   const [users, setUsers] = useState(initialUsers);
 
   const initialProducts = [
-    { name: "Milk 1L", price: "4500", category: "Dairy", barcode: "1234567890123", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200" },
-    { name: "Bread White", price: "2500", category: "Bakery", barcode: "1234567890124", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200" },
-    { name: "Rice 5kg", price: "12500", category: "Grains", barcode: "1234567890125", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200" },
-    { name: "Cooking Oil 2L", price: "18500", category: "Pantry", barcode: "1234567890126", image: "https://images.unsplash.com/photo-1474979266404-7cadd259c308?w=200" },
-    { name: "Sugar 2kg", price: "6500", category: "Pantry", barcode: "1234567890127", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=200" },
-    { name: "Salt 1kg", price: "1200", category: "Pantry", barcode: "1234567890128", image: "https://images.unsplash.com/photo-1518110925495-59969794f526?w=200" },
-    { name: "Eggs 30pk", price: "13500", category: "Dairy", barcode: "1234567890129", image: "https://images.unsplash.com/photo-1506976785307-8732e854ad03?w=200" },
-    { name: "Butter 500g", price: "9500", category: "Dairy", barcode: "1234567890130", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200" },
-    { name: "Cheese 250g", price: "8500", category: "Dairy", barcode: "1234567890131", image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=200" },
-    { name: "Yogurt 1L", price: "5500", category: "Dairy", barcode: "1234567890132", image: "https://images.unsplash.com/photo-1571212515416-f223d6385720?w=200" },
-    { name: "Chicken 1kg", price: "14500", category: "Meat", barcode: "1234567890133", image: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=200" },
-    { name: "Beef 1kg", price: "18500", category: "Meat", barcode: "1234567890134", image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200" },
-    { name: "Fish Tilapia", price: "12500", category: "Seafood", barcode: "1234567890135", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200" },
-    { name: "Tomatoes 1kg", price: "3500", category: "Vegetables", barcode: "1234567890136", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200" },
-    { name: "Onions 1kg", price: "2800", category: "Vegetables", barcode: "1234567890137", image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=200" },
-    { name: "Potatoes 5kg", price: "9500", category: "Vegetables", barcode: "1234567890138", image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200" },
-    { name: "Bananas 1kg", price: "3200", category: "Fruits", barcode: "1234567890139", image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200" },
-    { name: "Apples 1kg", price: "7800", category: "Fruits", barcode: "1234567890140", image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=200" },
-    { name: "Oranges 1kg", price: "5800", category: "Fruits", barcode: "1234567890141", image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=200" },
-    { name: "Water 5L", price: "4200", category: "Beverages", barcode: "1234567890142", image: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=200" },
+    {
+      name: "Milk 1L",
+      price: "4500",
+      category: "Dairy",
+      barcode: "1234567890123",
+      image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200",
+    },
+    {
+      name: "Bread White",
+      price: "2500",
+      category: "Bakery",
+      barcode: "1234567890124",
+      image:
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200",
+    },
+    {
+      name: "Rice 5kg",
+      price: "12500",
+      category: "Grains",
+      barcode: "1234567890125",
+      image:
+        "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200",
+    },
+    {
+      name: "Cooking Oil 2L",
+      price: "18500",
+      category: "Pantry",
+      barcode: "1234567890126",
+      image:
+        "https://images.unsplash.com/photo-1474979266404-7cadd259c308?w=200",
+    },
+    {
+      name: "Sugar 2kg",
+      price: "6500",
+      category: "Pantry",
+      barcode: "1234567890127",
+      image:
+        "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=200",
+    },
+    {
+      name: "Salt 1kg",
+      price: "1200",
+      category: "Pantry",
+      barcode: "1234567890128",
+      image:
+        "https://images.unsplash.com/photo-1518110925495-59969794f526?w=200",
+    },
+    {
+      name: "Eggs 30pk",
+      price: "13500",
+      category: "Dairy",
+      barcode: "1234567890129",
+      image:
+        "https://images.unsplash.com/photo-1506976785307-8732e854ad03?w=200",
+    },
+    {
+      name: "Butter 500g",
+      price: "9500",
+      category: "Dairy",
+      barcode: "1234567890130",
+      image:
+        "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200",
+    },
+    {
+      name: "Cheese 250g",
+      price: "8500",
+      category: "Dairy",
+      barcode: "1234567890131",
+      image:
+        "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=200",
+    },
+    {
+      name: "Yogurt 1L",
+      price: "5500",
+      category: "Dairy",
+      barcode: "1234567890132",
+      image:
+        "https://images.unsplash.com/photo-1571212515416-f223d6385720?w=200",
+    },
+    {
+      name: "Chicken 1kg",
+      price: "14500",
+      category: "Meat",
+      barcode: "1234567890133",
+      image:
+        "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=200",
+    },
+    {
+      name: "Beef 1kg",
+      price: "18500",
+      category: "Meat",
+      barcode: "1234567890134",
+      image:
+        "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200",
+    },
+    {
+      name: "Fish Tilapia",
+      price: "12500",
+      category: "Seafood",
+      barcode: "1234567890135",
+      image:
+        "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200",
+    },
+    {
+      name: "Tomatoes 1kg",
+      price: "3500",
+      category: "Vegetables",
+      barcode: "1234567890136",
+      image:
+        "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200",
+    },
+    {
+      name: "Onions 1kg",
+      price: "2800",
+      category: "Vegetables",
+      barcode: "1234567890137",
+      image:
+        "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=200",
+    },
+    {
+      name: "Potatoes 5kg",
+      price: "9500",
+      category: "Vegetables",
+      barcode: "1234567890138",
+      image:
+        "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200",
+    },
+    {
+      name: "Bananas 1kg",
+      price: "3200",
+      category: "Fruits",
+      barcode: "1234567890139",
+      image:
+        "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200",
+    },
+    {
+      name: "Apples 1kg",
+      price: "7800",
+      category: "Fruits",
+      barcode: "1234567890140",
+      image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=200",
+    },
+    {
+      name: "Oranges 1kg",
+      price: "5800",
+      category: "Fruits",
+      barcode: "1234567890141",
+      image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=200",
+    },
+    {
+      name: "Water 5L",
+      price: "4200",
+      category: "Beverages",
+      barcode: "1234567890142",
+      image:
+        "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=200",
+    },
   ];
 
-  const [products, setProducts] = useState(initialProducts.map((p, i) => ({ ...p, id: (i + 1).toString() })));
+  const [products, setProducts] = useState(
+    initialProducts.map((p, i) => ({ ...p, id: (i + 1).toString() })),
+  );
 
- 
   const [orders, setOrders] = useState([
-    { id: '1', product: 'Milk 1L', date: '2023-10-27', status: 'Out for Delivery', price: 'Tsh 4,500' },
-    { id: '2', product: 'Bread White', date: '2023-10-25', status: 'Delivered', price: 'Tsh 2,500' },
+    {
+      id: "1",
+      product: "Milk 1L",
+      date: "2023-10-27",
+      status: "Out for Delivery",
+      price: "Tsh 4,500",
+    },
+    {
+      id: "2",
+      product: "Bread White",
+      date: "2023-10-25",
+      status: "Delivered",
+      price: "Tsh 2,500",
+    },
   ]);
 
-  
-  const [sales, setSales] = useState([
-    { id: '1', customer: 'John Doe', product: 'Milk 1L', amount: '4500', date: '2023-10-25' },
-    { id: '2', customer: 'Jane Smith', product: 'Bread White', amount: '2500', date: '2023-10-24' },
-    { id: '3', customer: 'Alice Johnson', product: 'Rice 5kg', amount: '12500', date: '2023-10-23' },
-  ]);
+  const [sales, setSales] = useState([]);
 
- 
-  const initialTransactions = [
-    { id: "T001", cashier: "John", items: 5, total: "45200", date: "2025-02-19", paymentMethod: "Cash", amountPaid: "46000", change: "800", cartItems: [] },
-    { id: "T002", cashier: "Jane", items: 3, total: "23500", date: "2025-02-19", paymentMethod: "Card", amountPaid: "23500", change: "0", cartItems: [] },
-  ];
+  const initialTransactions = [];
   const [transactions, setTransactions] = useState(initialTransactions);
 
   const [dailySales, setDailySales] = useState([]);
 
- 
   useEffect(() => {
     const stats = {};
-    transactions.forEach(t => {
+    transactions.forEach((t) => {
       if (!stats[t.date]) {
         stats[t.date] = { date: t.date, total: 0, transactions: 0 };
       }
       stats[t.date].total += parseInt(t.total);
       stats[t.date].transactions += 1;
     });
-    setDailySales(Object.values(stats).map(s => ({...s, total: s.total.toString()})));
+    setDailySales(
+      Object.values(stats).map((s) => ({ ...s, total: s.total.toString() })),
+    );
   }, [transactions]);
 
   const addToCart = (product) => {
@@ -111,6 +263,12 @@ export const CartProvider = ({ children }) => {
   const deleteProduct = (productId) => {
     setProducts(products.filter((item) => item.id !== productId));
   };
+  // Inside CartContext.js, add this function
+  const addProduct = (newProduct) => {
+    // Create a simple ID for the new product (in a real app, this might come from a database)
+    const newId = (products.length + 1).toString();
+    setProducts([...products, { ...newProduct, id: newId }]);
+  };
 
   const registerUser = (newUser) => {
     setUsers([...users, newUser]);
@@ -138,7 +296,7 @@ export const CartProvider = ({ children }) => {
 
     const newTransaction = {
       id: `T${Math.floor(Math.random() * 10000)}`,
-      cashier: "Current Cashier", 
+      cashier: "Current Cashier",
       items: itemsCount,
       total: total.toString(),
       date: date,
@@ -150,13 +308,12 @@ export const CartProvider = ({ children }) => {
 
     setTransactions([newTransaction, ...transactions]);
 
-    
-    const newSales = cartItems.map(item => ({
-        id: Math.random().toString(),
-        customer: "Walk-in Customer",
-        product: item.name,
-        amount: item.price.replace(/[^0-9]/g, ''),
-        date: date
+    const newSales = cartItems.map((item) => ({
+      id: Math.random().toString(),
+      customer: "Walk-in Customer",
+      product: item.name,
+      amount: item.price.replace(/[^0-9]/g, ""),
+      date: date,
     }));
     setSales([...newSales, ...sales]);
 
@@ -164,9 +321,8 @@ export const CartProvider = ({ children }) => {
     return newTransaction;
   };
 
- 
   const checkout = () => {
-    completeTransaction('Cash', calculateTotal(), 0);
+    completeTransaction("Cash", calculateTotal(), 0);
   };
 
   return (
@@ -182,12 +338,13 @@ export const CartProvider = ({ children }) => {
         dailySales,
         products,
         deleteProduct,
+        addProduct,
         users,
         registerUser,
         sales,
         deleteSale,
         orders,
-        checkout
+        checkout,
       }}
     >
       {children}

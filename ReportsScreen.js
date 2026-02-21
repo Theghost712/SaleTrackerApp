@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, SafeAreaView } from "react-native";
 import { useCart } from "./CartContext";
 
 export default function ReportsScreen() {
   const { dailySales, transactions } = useCart();
 
- 
   const today = new Date().toISOString().split("T")[0];
   const todaySales = dailySales.find((d) => d.date === today) || {
     total: "0",
@@ -17,139 +16,212 @@ export default function ReportsScreen() {
   );
   const totalTransactions = transactions.length;
 
-  
   const avgTransactionValue =
     totalTransactions > 0 ? Math.round(totalRevenue / totalTransactions) : 0;
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Business Reports</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Reports</Text>
+          <Text style={styles.headerSubtitle}>Business analytics</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Today's Summary</Text>
-        <View style={styles.card}>
-          <View style={styles.row}>
-            <Text style={styles.label}>Sales Today</Text>
-            <Text style={styles.value}>
-              Tsh {parseInt(todaySales.total).toLocaleString()}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Transactions Today</Text>
-            <Text style={styles.value}>{todaySales.transactions}</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Today's Summary</Text>
+          <View style={styles.card}>
+            <View style={styles.statRow}>
+              <View style={styles.statIconContainer}>
+                <Text style={styles.statIcon}>💰</Text>
+              </View>
+              <View style={styles.statInfo}>
+                <Text style={styles.statLabel}>Sales Today</Text>
+                <Text style={styles.statValue}>
+                  Tsh {parseInt(todaySales.total).toLocaleString()}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.statRow}>
+              <View style={styles.statIconContainer}>
+                <Text style={styles.statIcon}>📋</Text>
+              </View>
+              <View style={styles.statInfo}>
+                <Text style={styles.statLabel}>Transactions Today</Text>
+                <Text style={styles.statValue}>{todaySales.transactions}</Text>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Overall Performance</Text>
-        <View style={styles.card}>
-          <View style={styles.row}>
-            <Text style={styles.label}>Total Revenue</Text>
-            <Text style={styles.value}>
-              Tsh {totalRevenue.toLocaleString()}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Total Transactions</Text>
-            <Text style={styles.value}>{totalTransactions}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Avg. Transaction Value</Text>
-            <Text style={styles.value}>
-              Tsh {avgTransactionValue.toLocaleString()}
-            </Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Overall Performance</Text>
+          <View style={styles.card}>
+            <View style={styles.statRow}>
+              <View style={styles.statIconContainer}>
+                <Text style={styles.statIcon}>🏦</Text>
+              </View>
+              <View style={styles.statInfo}>
+                <Text style={styles.statLabel}>Total Revenue</Text>
+                <Text style={styles.statValue}>
+                  Tsh {totalRevenue.toLocaleString()}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.statRow}>
+              <View style={styles.statIconContainer}>
+                <Text style={styles.statIcon}>📊</Text>
+              </View>
+              <View style={styles.statInfo}>
+                <Text style={styles.statLabel}>Total Transactions</Text>
+                <Text style={styles.statValue}>{totalTransactions}</Text>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.statRow}>
+              <View style={styles.statIconContainer}>
+                <Text style={styles.statIcon}>📈</Text>
+              </View>
+              <View style={styles.statInfo}>
+                <Text style={styles.statLabel}>Avg. Transaction Value</Text>
+                <Text style={styles.statValue}>
+                  Tsh {avgTransactionValue.toLocaleString()}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Daily Breakdown</Text>
-        {dailySales.map((day, index) => (
-          <View key={index} style={styles.dailyCard}>
-            <View style={styles.dailyHeader}>
-              <Text style={styles.dailyDate}>{day.date}</Text>
-              <Text style={styles.dailyTransactions}>
-                {day.transactions} transactions
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Daily Breakdown</Text>
+          {dailySales.map((day, index) => (
+            <View key={index} style={styles.dailyCard}>
+              <View style={styles.dailyLeft}>
+                <Text style={styles.dailyDate}>{day.date}</Text>
+                <Text style={styles.dailyTransactions}>
+                  {day.transactions} transactions
+                </Text>
+              </View>
+              <Text style={styles.dailyTotal}>
+                Tsh {parseInt(day.total).toLocaleString()}
               </Text>
             </View>
-            <Text style={styles.dailyTotal}>
-              Tsh {parseInt(day.total).toLocaleString()}
-            </Text>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F8F9FA",
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
     padding: 20,
   },
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 20,
+    marginBottom: 24,
+  },
+  headerTitle: {
+    fontSize: 34,
+    fontWeight: "700",
+    color: "#1A1A1A",
+    marginBottom: 4,
+    letterSpacing: -0.5,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#6B7280",
+    fontWeight: "500",
   },
   section: {
-    marginBottom: 25,
+    marginBottom: 24,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#555",
-    marginBottom: 10,
+    color: "#1A1A1A",
+    marginBottom: 12,
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    elevation: 2,
+    borderRadius: 24,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  row: {
+  statRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
+    alignItems: "center",
+    paddingVertical: 8,
   },
-  label: {
-    fontSize: 16,
-    color: "#666",
+  statIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#F0F9FF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 16,
   },
-  value: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
+  statIcon: {
+    fontSize: 24,
+  },
+  statInfo: {
+    flex: 1,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 4,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#1A1A1A",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#F0F0F0",
+    marginVertical: 8,
   },
   dailyCard: {
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 20,
+    padding: 16,
     marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  dailyHeader: {
+  dailyLeft: {
     flex: 1,
   },
   dailyDate: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#1A1A1A",
     marginBottom: 4,
   },
   dailyTransactions: {
     fontSize: 12,
-    color: "#999",
+    color: "#9CA3AF",
   },
   dailyTotal: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: "700",
     color: "#007AFF",
   },
 });

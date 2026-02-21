@@ -13,7 +13,7 @@ import CheckoutScreen from "./CheckoutScreen";
 import ProductDetailsScreen from "./ProductDetailsScreen";
 import CartScreen from "./CartScreen";
 import { CartProvider } from "./CartContext";
-
+import AddProductScreen from "./AddProductScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,12 +21,12 @@ export default function App() {
   return (
     <CartProvider>
       <NavigationContainer>
-        <Stack.Navigator 
+        <Stack.Navigator
           initialRouteName="Login"
           screenOptions={{
-            headerStyle: { backgroundColor: '#007AFF' },
-            headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' },
+            headerStyle: { backgroundColor: "#007AFF" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
             headerShadowVisible: false,
           }}
         >
@@ -34,7 +34,7 @@ export default function App() {
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
-            />
+          />
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
@@ -84,6 +84,12 @@ export default function App() {
             name="ProductDetails"
             component={ProductDetailsScreen}
             options={{ title: "Product Details" }}
+          />
+
+          <Stack.Screen
+            name="AddProduct"
+            component={AddProductScreen}
+            options={{ title: "Add New Product" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

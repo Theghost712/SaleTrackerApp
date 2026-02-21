@@ -8,14 +8,34 @@ import {
   Image,
   TextInput,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { useCart } from "./CartContext";
-
+import { useFocusEffect } from "@react-navigation/native"; // To reset state if needed
 export default function ProductListScreen({ navigation, route }) {
   const { addToCart, products, deleteProduct } = useCart();
   const isAdmin = route.params?.isAdmin;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        // Only show the button if the user is an admin
+        if (isAdmin) {
+          return (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AddProduct")}
+              style={{ marginRight: 15 }}
+            >
+              <Text style={{ fontSize: 24, color: "#007AFF" }}>+</Text>
+            </TouchableOpacity>
+          );
+        }
+        return null;
+      },
+    });
+  }, [navigation, isAdmin]);
 
   const categories = ["All", ...new Set(products.map((p) => p.category))];
 
@@ -39,7 +59,7 @@ export default function ProductListScreen({ navigation, route }) {
       <Image
         source={{ uri: item.image }}
         style={styles.productImage}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <View style={styles.itemInfo}>
         <Text style={styles.itemName}>{item.name}</Text>
@@ -50,134 +70,202 @@ export default function ProductListScreen({ navigation, route }) {
       </View>
       {isAdmin ? (
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: "#FF3B30" }]}
+          style={styles.deleteButton}
           onPress={() => {
             deleteProduct(item.id);
             Alert.alert("Deleted", `${item.name} has been removed.`);
           }}
         >
-          <Text style={styles.actionButtonText}>Delete</Text>
+          <Text style={styles.deleteButtonText}>✕</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={styles.actionButton}
+          style={styles.addButton}
           onPress={() => {
             addToCart(item);
             Alert.alert("Added", `${item.name} added to cart!`);
           }}
         >
-          <Text style={styles.actionButtonText}>Add</Text>
+          <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       )}
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search by name or barcode..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Products</Text>
+          <Text style={styles.headerSubtitle}>
+            {filteredProducts.length} items
+          </Text>
+        </View>
 
-      <FlatList
-        horizontal
-        data={categories}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              styles.categoryChip,
-              selectedCategory === item && styles.selectedCategory,
-            ]}
-            onPress={() => setSelectedCategory(item)}
-          >
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === item && styles.selectedCategoryText,
-              ]}
-            >
-              {item}
-            </Text>
-          </TouchableOpacity>
-        )}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categoryList}
-      />
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by name or barcode..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
 
-      <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No products found</Text>
-        }
-      />
-    </View>
+        {/* Category Section */}
+        <View style={styles.categorySection}>
+          <Text style={styles.categorySectionTitle}>Categories</Text>
+          <FlatList
+            horizontal
+            data={categories}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.categoryChip,
+                  selectedCategory === item && styles.selectedCategory,
+                ]}
+                onPress={() => setSelectedCategory(item)}
+                activeOpacity={0.6}
+              >
+                <Text
+                  style={[
+                    styles.categoryText,
+                    selectedCategory === item && styles.selectedCategoryText,
+                  ]}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            )}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryList}
+          />
+        </View>
+
+        <FlatList
+          data={filteredProducts}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyEmoji}>🔍</Text>
+              <Text style={styles.emptyText}>No products found</Text>
+              <Text style={styles.emptySubtext}>Try a different search</Text>
+            </View>
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F8F9FA",
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#1A1A1A",
+    marginBottom: 4,
+    letterSpacing: -0.5,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  searchContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 16,
   },
   searchInput: {
     backgroundColor: "#fff",
-    padding: 15,
-    margin: 16,
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 5,
+    padding: 16,
+    borderRadius: 30,
+    fontSize: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+    color: "#1A1A1A",
+  },
+  categorySection: {
+    marginBottom: 16,
+  },
+  categorySectionTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#4B5563",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 8,
+    paddingHorizontal: 20,
   },
   categoryList: {
     paddingHorizontal: 20,
-    marginBottom: 15,
   },
   categoryChip: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 30,
     backgroundColor: "#fff",
     marginRight: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#E5E7EB",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   selectedCategory: {
     backgroundColor: "#007AFF",
     borderColor: "#007AFF",
   },
   categoryText: {
-    color: "#666",
+    color: "#4B5563",
+    fontWeight: "600",
+    fontSize: 14,
   },
   selectedCategoryText: {
     color: "#fff",
   },
   listContent: {
     padding: 20,
+    paddingTop: 0,
   },
   itemContainer: {
     backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 16,
+    padding: 16,
+    borderRadius: 24,
     marginBottom: 12,
     flexDirection: "row",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
     elevation: 3,
   },
   productImage: {
-    width: 70,
-    height: 70,
-    borderRadius: 12,
-    marginRight: 15,
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    marginRight: 16,
     backgroundColor: "#F8F9FA",
   },
   itemInfo: {
@@ -186,35 +274,65 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#1A1A1A",
+    marginBottom: 4,
   },
   itemCategory: {
-    fontSize: 12,
-    color: "#999",
-    marginTop: 2,
+    fontSize: 13,
+    color: "#6B7280",
+    marginBottom: 4,
   },
   itemPrice: {
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 15,
+    fontWeight: "700",
     color: "#007AFF",
-    marginTop: 4,
   },
-  actionButton: {
-    backgroundColor: "#E3F2FD",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 12,
+  addButton: {
+    backgroundColor: "#E8F2FF",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 10,
   },
-  actionButtonText: {
+  addButtonText: {
     color: "#007AFF",
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 24,
+    fontWeight: "600",
+  },
+  deleteButton: {
+    backgroundColor: "#FFE5E5",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 10,
+  },
+  deleteButtonText: {
+    color: "#FF3B30",
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 60,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 16,
+    opacity: 0.5,
   },
   emptyText: {
-    textAlign: "center",
-    marginTop: 50,
-    color: "#999",
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#1A1A1A",
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: "#6B7280",
   },
 });

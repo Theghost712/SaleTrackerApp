@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   View,
   Text,
@@ -11,14 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./Validationschema";
 import { ValidatedInput } from "./Inputvalidation";
-=======
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema } from './Validationschema'; 
-import { ValidatedInput } from './Inputvalidation';
-import { useCart } from './CartContext';
->>>>>>> eaf07c97398d7e005c42ce67e48ed5923b661680
+import { useCart } from "./CartContext";
 
 export default function AuthScreen({ navigation }) {
   const { users } = useCart();
@@ -29,28 +21,37 @@ export default function AuthScreen({ navigation }) {
 
   const onSubmit = (data) => {
     console.log(data);
-<<<<<<< HEAD
 
-    const targetScreen = data.email.toLowerCase().includes("admin")
-      ? "OwnerHome"
-      : "CashierHome";
-
-    Alert.alert("Success", "Login Successful!", [
-      { text: "OK", onPress: () => navigation.navigate(targetScreen) },
-    ]);
-=======
-    
-    const user = users.find(u => u.email.toLowerCase() === data.email.toLowerCase() && u.password === data.password);
+    // Check if user exists in the registered users
+    const user = users?.find(
+      (u) =>
+        u.email?.toLowerCase() === data.email?.toLowerCase() &&
+        u.password === data.password,
+    );
 
     if (user) {
-      const targetScreen = user.role === 'admin' ? 'OwnerHome' : 'CashierHome';
+      // User exists - allow login
+      const targetScreen = user.role === "admin" ? "OwnerHome" : "CashierHome";
       Alert.alert("Success", "Login Successful!", [
-        { text: "OK", onPress: () => navigation.navigate(targetScreen) }
+        { text: "OK", onPress: () => navigation.navigate(targetScreen) },
       ]);
     } else {
-      Alert.alert("Login Failed", "Invalid email or password. Please register if you don't have an account.");
+      // User doesn't exist or credentials don't match - prevent login
+      Alert.alert(
+        "Login Failed",
+        "Invalid email or password. Please register if you don't have an account.",
+        [
+          {
+            text: "Register",
+            onPress: () => navigation.navigate("Register"),
+          },
+          {
+            text: "Try Again",
+            style: "cancel",
+          },
+        ],
+      );
     }
->>>>>>> eaf07c97398d7e005c42ce67e48ed5923b661680
   };
 
   return (

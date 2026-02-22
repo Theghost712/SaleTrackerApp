@@ -6,18 +6,13 @@ import {
   Alert,
   ImageBackground,
 } from "react-native";
+
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./Validationschema";
 import { ValidatedInput } from "./Inputvalidation";
-=======
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema } from './Validationschema'; 
-import { ValidatedInput } from './Inputvalidation';
-import { useCart } from './CartContext';
->>>>>>> eaf07c97398d7e005c42ce67e48ed5923b661680
+import { useCart } from "./CartContext";
 
 export default function AuthScreen({ navigation }) {
   const { users } = useCart();
@@ -37,70 +32,69 @@ export default function AuthScreen({ navigation }) {
       { text: "OK", onPress: () => navigation.navigate(targetScreen) },
     ]);
   };
- 
-   
-   return (
-      <ImageBackground
-       source={{
-         uri: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop",
-       }}
-       style={styles.backgroundImage}
-       resizeMode="cover"
-     >
-       <View style={styles.overlay}>
-         <View style={styles.container}>
-           <View style={styles.headerContainer}>
-             <View style={styles.logoContainer}>
-               <Text style={styles.logo}>📊</Text>
-             </View>
-             <Text style={styles.appTitle}>SalesTracker</Text>
-             <Text style={styles.subtitle}>Sign in to continue</Text>
-           </View>
- 
-           <View style={styles.formContainer}>
-             <ValidatedInput
-               control={control}
-               name="email"
-               placeholder="Email Address"
-               keyboardType="email-address"
-             />
-             <ValidatedInput
-               control={control}
-               name="password"
-               placeholder="Password"
-               secureTextEntry
-             />
- 
-             <TouchableOpacity
-               style={styles.primaryButton}
-               onPress={handleSubmit(onSubmit)}
-               activeOpacity={0.8}
-             >
-               <Text style={styles.primaryButtonText}>Sign In</Text>
-             </TouchableOpacity>
- 
-             <View style={styles.row}>
-               <TouchableOpacity
-                 style={styles.outlineButton}
-                 onPress={() => navigation.navigate("Register")}
-               >
-                 <Text style={styles.outlineButtonText}>Create Account</Text>
-               </TouchableOpacity>
- 
-               <TouchableOpacity
-                 style={styles.outlineButton}
-                 onPress={() =>
-                   Alert.alert("Info", "Password reset feature coming soon")
-                 }
-               >
-                 <Text style={styles.outlineButtonText}>Forgot Password?</Text>
-               </TouchableOpacity>
-             </View>
-           </View>
-         </View>
-       </View>
-     </ImageBackground>
-   );
+
+  return (
+    <ImageBackground
+      source={{
+        uri: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop",
+      }}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <View style={styles.logoContainer}>
+              <Text style={styles.logo}>📊</Text>
+            </View>
+            <Text style={styles.appTitle}>SalesTracker</Text>
+            <Text style={styles.subtitle}>Sign in to continue</Text>
+          </View>
+
+          <View style={styles.formContainer}>
+            <ValidatedInput
+              control={control}
+              name="email"
+              placeholder="Email Address"
+              keyboardType="email-address"
+            />
+            <ValidatedInput
+              control={control}
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+            />
+
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={handleSubmit(onSubmit)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.primaryButtonText}>Sign In</Text>
+            </TouchableOpacity>
+
+            <View style={styles.row}>
+              <TouchableOpacity
+                style={styles.outlineButton}
+                onPress={() => navigation.navigate("Register")}
+              >
+                <Text style={styles.outlineButtonText}>Create Account</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.outlineButton}
+                onPress={() =>
+                  Alert.alert("Info", "Password reset feature coming soon")
+                }
+              >
+                <Text style={styles.outlineButtonText}>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -7,7 +7,6 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./Validationschema";
@@ -22,8 +21,36 @@ export default function AuthScreen({ navigation }) {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("Login attempt:", data);
 
+    // Find user by email (case-insensitive)
+    const existingUser = users.find(
+      (user) => user.email.toLowerCase() === data.email.toLowerCase(),
+    );
+
+    // Check if user exists
+    if (!existingUser) {
+      Alert.alert(
+        "Login Failed",
+        "No account found with this email. Please register first.",
+        [
+          {
+            text: "Register",
+            onPress: () => navigation.navigate("Register"),
+          },
+          { text: "Try Again", style: "cancel" },
+        ],
+      );
+      return;
+    }
+
+    // Verify password (assuming passwords are stored as plain text)
+    if (existingUser.password !== data.password) {
+      Alert.alert("Login Failed", "Incorrect password. Please try again.");
+      return;
+    }
+
+    // Determine user role and navigate
     const targetScreen = data.email.toLowerCase().includes("admin")
       ? "OwnerHome"
       : "CashierHome";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,9 @@ import { useCart } from "./CartContext";
 
 export default function RegisterScreen({ navigation }) {
   const { users, registerUser } = useCart();
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [logoPressCount, setLogoPressCount] = useState(0);
+
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -24,6 +27,27 @@ export default function RegisterScreen({ navigation }) {
       confirmPassword: "",
     },
   });
+
+  // Secret admin mode - tap logo 5 times
+  const handleLogoPress = () => {
+    const newCount = logoPressCount + 1;
+    setLogoPressCount(newCount);
+
+    if (newCount === 5) {
+      // Reset counter and toggle admin mode
+      setLogoPressCount(0);
+      setIsAdminMode(!isAdminMode);
+
+      Alert.alert(
+        "🎭 Admin Mode",
+        `Admin registration is now ${!isAdminMode ? "ENABLED" : "DISABLED"}`,
+        [{ text: "OK" }],
+      );
+    } else if (newCount === 3) {
+      // Hint after 3 taps
+      Alert.alert("💡 Hint", `${5 - newCount} more taps for secret mode`);
+    }
+  };
 
   const onSubmit = (data) => {
     const emailExists = users.some(
@@ -39,13 +63,17 @@ export default function RegisterScreen({ navigation }) {
       fullName: data.fullName,
       email: data.email,
       password: data.password,
-      role: "cashier",
+      role: isAdminMode ? "admin" : "cashier",
     });
 
-    console.log(data);
-    Alert.alert("Success", "Account created successfully!", [
-      { text: "OK", onPress: () => navigation.navigate("Login") },
-    ]);
+    console.log("Registration data:", data);
+    console.log("Registered as:", isAdminMode ? "ADMIN" : "cashier");
+
+    Alert.alert(
+      "✅ Success",
+      `Account created successfully as ${isAdminMode ? "ADMIN" : "cashier"}!`,
+      [{ text: "OK", onPress: () => navigation.navigate("Login") }],
+    );
   };
 
   return (
@@ -59,14 +87,29 @@ export default function RegisterScreen({ navigation }) {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <View style={styles.logoContainer}>
+            <TouchableOpacity
+              style={styles.logoContainer}
+              onPress={handleLogoPress}
+              activeOpacity={0.7}
+              delayPressIn={100} // Small delay to prevent accidental triggers
+            >
               <Text style={styles.logo}>📝</Text>
-            </View>
+            </TouchableOpacity>
             <Text style={styles.title}>Create Account</Text>
             <Text style={styles.subtitle}>Join SalesTracker today</Text>
+            {isAdminMode && (
+              <View style={styles.adminBadge}>
+                <Text style={styles.adminBadgeText}>👑 ADMIN MODE ACTIVE</Text>
+              </View>
+            )}
           </View>
 
-          <View style={styles.formContainer}>
+          <View
+            style={[
+              styles.formContainer,
+              isAdminMode && styles.adminFormContainer,
+            ]}
+          >
             <ValidatedInput
               control={control}
               name="fullName"
@@ -97,11 +140,13 @@ export default function RegisterScreen({ navigation }) {
             />
 
             <TouchableOpacity
-              style={styles.button}
+              style={[styles.button, isAdminMode && styles.adminButton]}
               onPress={handleSubmit(onSubmit)}
               activeOpacity={0.8}
             >
-              <Text style={styles.buttonText}>Sign Up</Text>
+              <Text style={styles.buttonText}>
+                {isAdminMode ? "👑 Register as Admin" : "Sign Up"}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -162,6 +207,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#6B7280",
     fontWeight: "500",
+    marginBottom: 8,
+  },
+  adminBadge: {
+    backgroundColor: "#FBBF24",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 20,
+    marginTop: 8,
+  },
+  adminBadgeText: {
+    color: "#92400E",
+    fontWeight: "700",
+    fontSize: 12,
+    letterSpacing: 0.5,
   },
   formContainer: {
     backgroundColor: "#fff",
@@ -172,6 +231,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 16,
     elevation: 10,
+  },
+  adminFormContainer: {
+    borderWidth: 2,
+    borderColor: "#FBBF24",
+    shadowColor: "#FBBF24",
+    shadowOpacity: 0.2,
   },
   button: {
     backgroundColor: "#10B981",
@@ -185,6 +250,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
+  },
+  adminButton: {
+    backgroundColor: "#92400E",
+    shadowColor: "#92400E",
   },
   buttonText: {
     color: "#fff",

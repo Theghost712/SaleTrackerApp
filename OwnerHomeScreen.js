@@ -99,13 +99,6 @@ export default function SellerHomeScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Revenue Summary</Text>
           <View style={styles.summaryCard}>
             <View style={styles.summaryRow}>
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Online Sales</Text>
-                <Text style={styles.summaryValue}>
-                  Tsh {formatNumber(Math.round(totalRevenue * 0.7))}{" "}
-                  {/* Example split – adjust as needed */}
-                </Text>
-              </View>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
                 <Text style={styles.summaryLabel}>In-Store Sales</Text>

@@ -11,7 +11,8 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useCart } from "./CartContext";
-import { useFocusEffect } from "@react-navigation/native"; // To reset state if needed
+import { useFocusEffect } from "@react-navigation/native";
+
 export default function ProductListScreen({ navigation, route }) {
   const { addToCart, products, deleteProduct } = useCart();
   const isAdmin = route.params?.isAdmin;
@@ -21,7 +22,6 @@ export default function ProductListScreen({ navigation, route }) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        // Only show the button if the user is an admin
         if (isAdmin) {
           return (
             <TouchableOpacity
@@ -56,11 +56,22 @@ export default function ProductListScreen({ navigation, route }) {
       }
       activeOpacity={0.7}
     >
-      <Image
-        source={{ uri: item.image }}
-        style={styles.productImage}
-        resizeMode="cover"
-      />
+      {/* Fixed: Check if image exists and is valid */}
+      {item.image && item.image.trim() !== "" ? (
+        <Image
+          source={{ uri: item.image }}
+          style={styles.productImage}
+          resizeMode="cover"
+          onError={(e) => console.log("Image failed to load:", item.name)}
+        />
+      ) : (
+        <View style={[styles.productImage, styles.placeholderImage]}>
+          <Text style={styles.placeholderText}>
+            {item.name.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+      )}
+
       <View style={styles.itemInfo}>
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemCategory}>{item.category}</Text>
@@ -112,7 +123,6 @@ export default function ProductListScreen({ navigation, route }) {
           />
         </View>
 
-        {/* Category Section */}
         <View style={styles.categorySection}>
           <Text style={styles.categorySectionTitle}>Categories</Text>
           <FlatList
@@ -267,6 +277,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 16,
     backgroundColor: "#F8F9FA",
+  },
+  // New styles for placeholder image
+  placeholderImage: {
+    backgroundColor: "#E5E7EB",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholderText: {
+    fontSize: 32,
+    fontWeight: "600",
+    color: "#9CA3AF",
   },
   itemInfo: {
     flex: 1,

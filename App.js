@@ -15,7 +15,6 @@ import CartScreen from "./CartScreen";
 import { CartProvider } from "./CartContext";
 import AddProductScreen from "./AddProductScreen";
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -92,12 +91,6 @@ export default function App() {
             component={AddProductScreen}
             options={{ title: "Add New Product" }}
           />
-          
-          <Stack.Screen
-          name="useCart"
-          component={useCart}
-          options={{ title: "Current Transaction" }}
-        />
         </Stack.Navigator>
       </NavigationContainer>
     </CartProvider>
